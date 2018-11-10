@@ -6,33 +6,35 @@ using System.Threading.Tasks;
 
 namespace ConsoleApp1
 {
-    abstract class Things
+    public abstract class Things
     {
-        int quantity { get; set; }
-        string name { get; set; }
+        public int quantity { get; set; }
+        public string name { get; set; }
     }
-    class Car:Things
+    public class Car :Things
     {
-        int capasity { get; set; }
-        void Drive()
+        public int capasity { get; set; }
+        public void Drive()
         {
             Console.WriteLine("RUNNING");
         }
     }
-    class Tree:Things
+    public class Tree :Things
     {
-        int height { get; set; }
-        void Grow()
+        public int height { get; set; }
+        public void Grow()
         {
             Console.WriteLine("GROWING");
         }
     }
-    class Pet:Things
+    public class Pet :Things
     {
-        void Feed()
+        public void Feed()
         {
             Console.WriteLine("FEEDING");
         }
     }
+
+
 
 }
