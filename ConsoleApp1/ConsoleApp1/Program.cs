@@ -11,32 +11,38 @@ namespace ConsoleApp1
     {
         static void Main()
         {
-            Type t = typeof(Car); // get a Type object representing MyClass 
-
-            Console.WriteLine("Analyzing methods in " + t.Name);
-            Console.WriteLine();
-
-            Console.WriteLine("Methods supported: ");
-
-            MethodInfo[]  mi = t.GetMethods();
-
-            // Display methods supported by MyClass. 
-            foreach (MethodInfo m in mi)
+            Things[] tc = new Things[3];
+            tc[0] = new Car();
+            tc[1] = new Tree();
+            tc[2] = new Pet();
+            foreach (Things N in tc)
             {
-                // Display return type and name. 
-                Console.Write("   " + m.ReturnType.Name +
-                                " " + m.Name + "(");
 
-                // Display parameters. 
-                ParameterInfo[] pi = m.GetParameters();
+                Type c = N.GetType(); // get a Type object representing MyClass 
+                N.name = c.ToString();
+                Console.WriteLine("Analyzing methods in " + c.Name);
+                Console.WriteLine();
 
-                for (int i = 0; i < pi.Length; i++)
+                Console.WriteLine("Methods supported: ");
+
+                MethodInfo[] mi = c.GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+
+                // Display methods supported by MyClass. 
+                foreach (MethodInfo m in mi)
                 {
-                    Console.Write(pi[i].ParameterType.Name +
-                                  " " + pi[i].Name);
-                    if (i + 1 < pi.Length) Console.Write(", ");
-                }
+                    // Display return type and name. 
+                    Console.Write("   " + m.ReturnType.Name +
+                                    " " + m.Name + "(");
+                    // Display parameters. 
+                    ParameterInfo[] pi = m.GetParameters();
 
+                    for (int i = 0; i < pi.Length; i++)
+                    {
+                        Console.WriteLine(pi[i].ParameterType.Name +
+                                      " " + pi[i].Name);
+                        if (i + 1 < pi.Length) Console.Write(", ");
+                    }
+                }
                 Console.WriteLine(")");
 
                 Console.WriteLine();

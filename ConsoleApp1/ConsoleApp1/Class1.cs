@@ -8,28 +8,28 @@ namespace ConsoleApp1
 {
     public abstract class Things
     {
-        public int quantity { get; set; }
+        public int quantity { get { return 1; } set { this.quantity = 1; } }
         public string name { get; set; }
     }
-    public class Car :Things
+    class Car :Things
     {
-        public int capasity { get; set; }
-        public void Drive()
+        int capasity { get { return 2; } set { this.capasity = 2; } }
+        void Drive()
         {
             Console.WriteLine("RUNNING");
         }
     }
-    public class Tree :Things
+    class Tree :Things
     {
-        public int height { get; set; }
-        public void Grow()
+        int height { get { return 3; } set { this.height = 3; } }
+        void Grow()
         {
             Console.WriteLine("GROWING");
         }
     }
-    public class Pet :Things
+    class Pet :Things
     {
-        public void Feed()
+        void Feed()
         {
             Console.WriteLine("FEEDING");
         }
