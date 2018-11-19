@@ -46,7 +46,7 @@ namespace ConsoleApp1
                 {
                     foreach (PropertyInfo prop in c.GetProperties())
                     {
-                    Console.WriteLine("{0} {1}", prop.PropertyType, prop.Name);
+                    Console.WriteLine("{0} {1} {2}", prop.PropertyType, prop.Name, prop.GetValue(N));
                         str = prop.Name + ":"+prop.GetValue(N)+"\r\n"; // add newline  
                         fstr_out.Write(str);
                     }
@@ -66,13 +66,13 @@ namespace ConsoleApp1
 
 
             }
+            Console.ReadKey();
             FileStream fin;
             string s;
             Console.WriteLine();
 
             foreach (Things N in tc)
             {
-
                 Type c = N.GetType(); // get a Type object representing MyClass 
                 Console.WriteLine("Creating property in " + c.Name);
                 Console.WriteLine();
@@ -92,21 +92,17 @@ namespace ConsoleApp1
                     while ((s = fstr_in.ReadLine()) != null)
                     {
                         string[] words = s.Split(new char[] { ':' });
-                        Console.WriteLine(words[0] + "  " + words[1]);
                         PropertyInfo piShared = c.GetProperty(words[0]);
-                        if (piShared.GetType().ToString() == "int")
+                        int number;
+                        if (int.TryParse(words[1], out number))
                         {
-                            piShared.SetValue(N, int.Parse(words[1]));
-                            Console.WriteLine("target");
+                            piShared.SetValue(N, number);
                         }
                         else
                         {
                             piShared.SetValue(N, words[1]);
                         }
-
-
-                        Console.WriteLine(N.name + s);
-                    }
+                   }
                 }
                 catch (IOException exc)
                 {
@@ -116,19 +112,31 @@ namespace ConsoleApp1
                 {
                     fstr_in.Close();
                 }
-
-                // Display methods supported by MyClass. 
-                Console.WriteLine(")");
-
-
             }
+            foreach (Things N in tc)
+            {
+                Type c = N.GetType(); // get a Type object representing MyClass 
+                N.name = c.ToString();
+                Console.WriteLine("Analyzing methods in " + c.Name);
+                Console.WriteLine();
 
+                Console.WriteLine("Methods supported: ");
+                // First, open the file stream. 
+                try
+                {
+                    foreach (PropertyInfo prop in c.GetProperties())
+                    {
+                        Console.WriteLine("{0} {1} {2}", prop.PropertyType, prop.Name, prop.GetValue(N));
+                    }
+                }
 
-
-
-
-
-
+                catch (IOException exc)
+                {
+                    Console.WriteLine("I/O Error:\n" + exc.Message);
+                }
+                    // Display methods supported by MyClass. 
+                Console.WriteLine(")");
+            }
             // Wrap the file stream in a StreamReader. 
         }
     }
