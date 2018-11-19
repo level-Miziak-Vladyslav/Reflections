@@ -8,20 +8,37 @@ namespace ConsoleApp1
 {
     public abstract class Things
     {
-        public int quantity { get { return 1; } set { this.quantity = 1; } }
+        public int quantity { get; set; }
         public string name { get; set; }
+        public Things()
+        {
+            name = "things";
+        }
     }
     class Car :Things
     {
-        int capasity { get { return 2; } set { this.capasity = 2; } }
+        public int capasity { get; set; }
+        public Car()
+        {
+            quantity = 1;
+            name = "BMW";
+            capasity = 5;
+        }
         void Drive()
+
         {
             Console.WriteLine("RUNNING");
         }
     }
     class Tree :Things
     {
-        int height { get { return 3; } set { this.height = 3; } }
+        public int height { get; set; }
+        public Tree()
+        {
+            quantity = 2;
+            name = "Oak";
+            height = 4;
+        }
         void Grow()
         {
             Console.WriteLine("GROWING");
@@ -29,6 +46,11 @@ namespace ConsoleApp1
     }
     class Pet :Things
     {
+        public Pet()
+        {
+            name = "things";
+        }
+
         void Feed()
         {
             Console.WriteLine("FEEDING");

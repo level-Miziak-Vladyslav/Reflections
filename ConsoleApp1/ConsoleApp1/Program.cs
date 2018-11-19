@@ -26,69 +26,110 @@ namespace ConsoleApp1
 
                 Console.WriteLine("Methods supported: ");
 
-                PropertyInfo[] pi = c.GetProperty(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+                string str;
+                FileStream fout;
 
-                // Display methods supported by MyClass. 
-                foreach (MethodInfo m in mi)
+                // First, open the file stream. 
+                try
                 {
-                    // Display return type and name. 
-                    Console.Write("   " + m.ReturnType.Name +
-                                    " " + m.Name + "(");
-                    // Display parameters. 
-                    ParameterInfo[] pi = m.GetParameters();
-
-                    for (int i = 0; i < pi.Length; i++)
-                    {
-                        Console.WriteLine(pi[i].ParameterType.Name +
-                                      " " + pi[i].Name);
-                        if (i + 1 < pi.Length) Console.Write(", ");
-                    }
+                    fout = new FileStream(c.Name+".txt", FileMode.Create);
                 }
-                Console.WriteLine(")");
-
-                Console.WriteLine();
-            }
-            string str;
-            FileStream fout;
-
-            // First, open the file stream. 
-            try
-            {
-                fout = new FileStream("test.txt", FileMode.Create);
-            }
-            catch (IOException exc)
-            {
-                Console.WriteLine("Error Opening File:\n" + exc.Message);
-                return;
-            }
-
-            // Wrap the file stream in a StreamReader. 
-            StreamWriter fstr_out = new StreamWriter(fout);
-
-            try
-            {
-                Console.WriteLine("Enter text ('stop' to quit).");
-
-                do
+                catch (IOException exc)
                 {
-                    Console.Write(": ");
-                    str = Console.ReadLine();
+                    Console.WriteLine("Error Opening File:\n" + exc.Message);
+                    return;
+                }
+                StreamWriter fstr_out = new StreamWriter(fout);
 
-                    if (str != "stop")
+
+                try
+                {
+                    foreach (PropertyInfo prop in c.GetProperties())
                     {
-                        str = str + "\r\n"; // add newline  
+                    Console.WriteLine("{0} {1}", prop.PropertyType, prop.Name);
+                        str = prop.Name + ":"+prop.GetValue(N)+"\r\n"; // add newline  
                         fstr_out.Write(str);
                     }
-                } while (str != "stop");
+                }
+
+                catch (IOException exc)
+                {
+                    Console.WriteLine("I/O Error:\n" + exc.Message);
+                }
+                finally
+                {
+                    fstr_out.Close();
+                }
+
+                // Display methods supported by MyClass. 
+                Console.WriteLine(")");
+
+
             }
-            catch (IOException exc)
+            FileStream fin;
+            string s;
+            Console.WriteLine();
+
+            foreach (Things N in tc)
             {
-                Console.WriteLine("I/O Error:\n" + exc.Message);
+
+                Type c = N.GetType(); // get a Type object representing MyClass 
+                Console.WriteLine("Creating property in " + c.Name);
+                Console.WriteLine();
+                // First, open the file stream. 
+                try
+                {
+                    fin = new FileStream(c.Name + ".txt", FileMode.Open);
+                }
+                catch (IOException exc)
+                {
+                    Console.WriteLine("Error Opening file:\n" + exc.Message);
+                    return;
+                }
+                StreamReader fstr_in = new StreamReader(fin);
+                try
+                {
+                    while ((s = fstr_in.ReadLine()) != null)
+                    {
+                        string[] words = s.Split(new char[] { ':' });
+                        Console.WriteLine(words[0] + "  " + words[1]);
+                        PropertyInfo piShared = c.GetProperty(words[0]);
+                        if (piShared.GetType().ToString() == "int")
+                        {
+                            piShared.SetValue(N, int.Parse(words[1]));
+                            Console.WriteLine("target");
+                        }
+                        else
+                        {
+                            piShared.SetValue(N, words[1]);
+                        }
+
+
+                        Console.WriteLine(N.name + s);
+                    }
+                }
+                catch (IOException exc)
+                {
+                    Console.WriteLine("I/O Error:\n" + exc.Message);
+                }
+                finally
+                {
+                    fstr_in.Close();
+                }
+
+                // Display methods supported by MyClass. 
+                Console.WriteLine(")");
+
+
             }
-            finally
-            {
-                fstr_out.Close();
-            }
+
+
+
+
+
+
+
+            // Wrap the file stream in a StreamReader. 
         }
     }
 }
